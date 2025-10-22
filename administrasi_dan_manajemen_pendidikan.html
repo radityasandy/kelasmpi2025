@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kumpulan Makalah - Kelas MPI B</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+ <header class="navbar">
+  <div class="nav-container">
+    <!-- Logo -->
+    <a class="logo">Kelas MPI B</a>
+
+    <!-- Tombol hamburger (mobile) -->
+    <button class="menu-toggle" id="menuToggle">☰</button>
+
+    <!-- Menu desktop -->
+    <nav class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="tentang.html">Tentang Kami</a>
+      <a href="makalah.html">Kumpulan Makalah</a>
+      <a href="kontak.html">Kontak</a>
+      <a href="login.html" id="login-btn-desktop">Login</a>
+      <a href="login.html" id="logout-btn-desktop" class="cta-button" style="display:none;">Logout</a>
+    </nav>
+  </div>
+
+  <!-- Menu mobile -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="index.html">Beranda</a>
+    <a href="tentang.html">Tentang Kami</a>
+    <a href="makalah.html">Kumpulan Makalah</a>
+    <a href="kontak.html">Kontak</a>
+    <a href="login.html" id="login-btn-mobile">Login</a>
+    <a href="login.html" class="cta-button" id="logout-btn-mobile" style="display:none;">Logout</a>
+  </div>
+</header>
+
+<!-- ============================== -->
+<!-- SECTION UPLOAD MAKALAH -->
+<!-- ============================== -->
+  <!-- ===== MAIN CONTENT ===== -->
+    <main>
+<section class="upload-section">
+  <h2 class="upload-title">Upload Makalah  Administrasi Dan Manajemen Pendidikan</h2>
+
+  <form id="makalahForm">
+    <label>Judul Makalah:</label>
+    <input type="text" id="judul" required>
+
+    <label>Kelompok:</label>
+    <input type="text" id="kelompok" required>
+
+    <label>Tanggal:</label>
+    <input type="date" id="tanggal" required>
+
+    <label>Pertemuan:</label>
+    <input type="number" id="pertemuan" required>
+
+    <label>Upload File (PDF/DOCX/PPTX):</label>
+    <input type="file" id="file" accept=".pdf,.doc,.docx,.ppt,.pptx">
+
+    <div class="button-group">
+      <button type="submit" id="submitBtn">Tambah Makalah</button>
+      <button type="button" id="updateBtn" style="display:none;">Update</button>
+      <button type="button" id="cancelBtn" style="display:none;">Batal</button>
+    </div>
+  </form>
+</section>
+
+
+<!-- Table Section -->
+<section class="table-section">
+  <h2 class="upload-title">Daftar Makalah Administrasi Dan Manajemen Pendidikan</h2>
+
+  <div class="search-filter">
+    <input type="text" id="searchInput" placeholder="Cari berdasarkan judul, kelompok, atau pertemuan...">
+  </div>
+
+  <table id="makalahTable">
+    <thead>
+      <tr>
+        <th>Judul</th>
+        <th>Kelompok</th>
+        <th>Tanggal</th>
+        <th>Pertemuan</th>
+        <th>Nama File</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+</main>
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 Kelas MPI (B). Semua Hak Dilindungi.</p>
+</footer>
+
+<script src="makalah_matkul.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
