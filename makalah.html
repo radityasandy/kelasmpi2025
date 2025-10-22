@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kumpulan Makalah - Kelas MPI B</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="left-section">
+        <div id="user-info" class="user-info"></div>
+        <a class="logo">Kelas MPI B</a>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Beranda</a>
+        <a href="tentang.html">Tentang Kami</a>
+        <a href="makalah.html">Kumpulan Makalah</a>
+        <a href="kontak.html">Kontak</a>
+        <a href="login.html" id="login-btn-desktop">Login</a>
+        <a href="login.html" id="logout-btn-desktop" class="cta-button" style="display:none;">Logout</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <div id="user-info-mobile" class="user-info-mobile"></div>
+      <a href="index.html">Beranda</a>
+      <a href="tentang.html">Tentang Kami</a>
+      <a href="makalah.html">Kumpulan Makalah</a>
+      <a href="kontak.html">Kontak</a>
+      <a href="login.html" id="login-btn-mobile">Login</a>
+      <a href="login.html" id="logout-btn-mobile" class="cta-button" style="display:none;">Logout</a>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main>
+    <section class="upload-section">
+      <h2 class="upload-title">Kumpulan Makalah per Mata Kuliah</h2>
+      <p class="upload-subtitle">Pilih mata kuliah untuk melihat dan mengunggah makalah atau PPT kelompok Anda.</p>
+
+      <!-- FORM UPLOAD ADMIN -->
+      <div id="upload-form" style="display:none; margin-bottom:20px;">
+        <input type="text" id="judul" placeholder="Judul Makalah" required />
+        <input type="text" id="kelompok" placeholder="Kelompok / Nama" required />
+        <input type="date" id="tanggal" required />
+        <input type="file" id="fileInput" />
+        <button onclick="uploadMakalah(document.getElementById('judul').value, document.getElementById('kelompok').value, document.getElementById('tanggal').value, 'fileInput')">Upload Makalah</button>
+      </div>
+
+      <!-- TABEL MAKALAH -->
+      <table class="makalah-table">
+        <thead>
+          <tr>
+            <th>Judul</th>
+            <th>Kelompok</th>
+            <th>Tanggal</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="makalahTableBody">
+          <tr><td colspan="4">Memuat data...</td></tr>
+        </tbody>
+      </table>
+
+      <div class="matkul-list" style="margin-top:30px;">
+        <a href="dasar_dasar_akuntansi.html" class="matkul-card"><i class="fa-solid fa-file-lines"></i> Dasar-Dasar Akuntansi</a>
+        <a href="filsafat_pendidikan.html" class="matkul-card"><i class="fa-solid fa-book"></i> Filsafat Pendidikan</a>
+        <a href="administrasi_dan_manajemen_pendidikan.html" class="matkul-card"><i class="fa-solid fa-building"></i> Administrasi & Manajemen Pendidikan</a>
+        <a href="pendidikan_pancasila.html" class="matkul-card"><i class="fa-solid fa-flag"></i> Pendidikan Pancasila</a>
+        <a href="studi_al-quran.html" class="matkul-card"><i class="fa-solid fa-quran"></i> Studi Al-Qur’an</a>
+        <a href="bahasa_inggris.html" class="matkul-card"><i class="fa-solid fa-language"></i> Bahasa Inggris</a>
+        <a href="studi_fikih.html" class="matkul-card"><i class="fa-solid fa-scale-balanced"></i> Studi Fikih</a>
+        <a href="akhlak_tasawuf.html" class="matkul-card"><i class="fa-solid fa-heart"></i> Akhlak Tasawuf</a>
+        <a href="budaya_organisasi.html" class="matkul-card"><i class="fa-solid fa-people-group"></i> Budaya Organisasi</a>
+        <a href="studi_hadist.html" class="matkul-card"><i class="fa-solid fa-book-quran"></i> Studi Hadist</a>
+        <a href="dasar_dasar_manajemen.html" class="matkul-card"><i class="fa-solid fa-briefcase"></i> Dasar-Dasar Manajemen</a>
+        <a href="ilmu_tauhid.html" class="matkul-card"><i class="fa-solid fa-mosque"></i> Ilmu Tauhid</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    © 2025 Kelas MPI (B). Semua Hak Dilindungi.
+  </footer>
+
+  <!-- JavaScript -->
+  <script type="module" src="script.js"></script>
+  <script>
+    // tampilkan form upload jika admin
+    document.addEventListener("DOMContentLoaded", () => {
+      const role = localStorage.getItem("userRole");
+      if(role === "admin"){
+        document.getElementById("upload-form").style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>
