@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Kelas MPI B</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ===== HEADER / NAVBAR ===== -->
+  <header class="navbar">
+    <div class="nav-container">
+      <!-- Logo -->
+      <a class="logo" href="index.html">Kelas MPI B</a>
+
+      <!-- Tombol hamburger (mobile) -->
+      <button class="menu-toggle" id="menuToggle">☰</button>
+
+      <!-- Menu versi desktop -->
+      <nav class="nav-links">
+        <a href="index.html">Beranda</a>
+        <a href="tentang.html">Tentang Kami</a>
+        <a href="makalah.html">Kumpulan Makalah</a>
+        <a href="kontak.html">Kontak</a>
+        <a href="login.html" id="login-btn-desktop" class="active">Login</a>
+        <a href="#" id="logout-btn-desktop" class="cta-button" style="display:none;">Logout</a>
+      </nav>
+    </div>
+
+    <!-- Menu versi mobile -->
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html">Beranda</a>
+      <a href="tentang.html">Tentang Kami</a>
+      <a href="makalah.html">Kumpulan Makalah</a>
+      <a href="kontak.html">Kontak</a>
+      <a href="login.html" id="login-btn-mobile" class="active">Login</a>
+      <a href="#" class="cta-button" id="logout-btn-mobile" style="display:none;">Logout</a>
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main>
+    <section class="login-section">
+      <div class="login-container">
+        <div class="login-box">
+          <!-- Gambar logo bundar -->
+          <img src="logokelasb.png" alt="Logo Kelas MPI B" class="login-image">
+
+          <h2>Login</h2>
+          <form onsubmit="validateLogin(event)">
+            <input type="email" id="email" placeholder="Masukkan Email" required>
+            <input type="password" id="password" placeholder="Masukkan Password" required>
+            <button type="submit" class="login-btn">Login</button>
+          </form>
+
+          <p>Silakan login untuk melanjutkan.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p>© 2025 Kelas MPI (B). Semua Hak Dilindungi.</p>
+  </footer>
+
+  <!-- ===== SCRIPT ===== -->
+  <script src="script.js"></script>
+
+</body>
+</html>
