@@ -1,147 +1,116 @@
 // ==============================
 // KONFIGURASI SUPABASE
 // ==============================
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+// dasarakuntansi.js
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-const SUPABASE_URL = "https://gufbusvnoscociobvxxn.supabase.co"; // Ganti dengan URL milikmu
-const SUPABASE_KEY = "YOUR_ANON_KEY_HERE"; // Ganti dengan anon key kamu
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// === KONFIGURASI SUPABASE ===
+const supabaseUrl = 'https://gufbusvnoscociobvxxn.supabase.co'
+const supabaseKey = 'ISI_DENGAN_ANON_KEY_KAMU'  // Ganti dengan anon public key dari Supabase
+const supabase = createClient(supabaseUrl, supabaseKey)
 
-// ==============================
-// AMBIL ELEMEN DOM
-// ==============================
-const form = document.getElementById("makalahForm");
-const tableBody = document.querySelector("#makalahTable tbody");
-const searchInput = document.getElementById("searchInput");
+// Nama tabel
+const TABLE_NAME = "makalah_dasar_akuntansi";
 
 // ==============================
-// FUNGSI UPLOAD MAKALAH
+// EVENT: Submit Form Upload
 // ==============================
-form.addEventListener("submit", async (e) => {
+document.getElementById("makalahForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const judul = document.getElementById("judul").value.trim();
   const kelompok = document.getElementById("kelompok").value.trim();
   const tanggal = document.getElementById("tanggal").value;
-  const pertemuan = parseInt(document.getElementById("pertemuan").value);
-  const fileInput = document.getElementById("file");
-  const file = fileInput.files[0];
+  const pertemuan = document.getElementById("pertemuan").value;
+  const file = document.getElementById("file").files[0];
 
-  if (!file) {
-    alert("Pilih file terlebih dahulu!");
-    return;
+  if (!file) return alert("⚠️ Pilih file terlebih dahulu!");
+
+  // Tentukan bucket berdasarkan ekstensi file
+  const ext = file.name.split(".").pop().toLowerCase();
+  let bucketName = "makalah";
+  if (["ppt", "pptx"].includes(ext)) {
+    bucketName = "ppt";
   }
 
-  const ext = file.name.split(".").pop().toLowerCase();
-  const bucketName = ["pdf", "doc", "docx"].includes(ext) ? "makalah" : "ppt";
-
-  const filePath = `${Date.now()}_${file.name}`;
-
-  // Upload ke Supabase Storage
+  // Upload ke bucket yang sesuai
+  const fileName = `${Date.now()}_${file.name}`;
   const { data: uploadData, error: uploadError } = await supabase.storage
     .from(bucketName)
-    .upload(filePath, file);
+    .upload(fileName, file);
 
   if (uploadError) {
     console.error(uploadError);
-    alert("❌ Gagal upload file ke Storage!");
+    alert("❌ Gagal mengunggah file ke bucket Supabase!");
     return;
   }
 
-  const { data: urlData } = supabase.storage
-    .from(bucketName)
-    .getPublicUrl(filePath);
+  // Ambil URL publik
+  const { data: publicUrl } = supabase.storage.from(bucketName).getPublicUrl(fileName);
 
-  const file_url = urlData.publicUrl;
-
-  // Simpan metadata ke tabel
-  const { error: insertError } = await supabase.from("makalah_list").insert([
+  // Simpan metadata ke tabel Supabase
+  const { error: insertError } = await supabase.from(TABLE_NAME).insert([
     {
       judul,
       kelompok,
       tanggal,
       pertemuan,
-      file_url,
-      nama_file: file.name,
+      file_name: file.name,
+      file_url: publicUrl.publicUrl,
+      file_type: ext,
+      bucket: bucketName,
     },
   ]);
 
   if (insertError) {
     console.error(insertError);
-    alert("❌ Gagal menyimpan ke database!");
-  } else {
-    alert("✅ Makalah berhasil ditambahkan!");
-    form.reset();
-    loadMakalah();
+    alert("❌ Gagal menyimpan data makalah ke tabel!");
+    return;
   }
+
+  alert("✅ Makalah berhasil diupload!");
+  e.target.reset();
+  loadTable();
 });
 
 // ==============================
-// FUNGSI MUAT DATA
+// FUNGSI: Tampilkan Tabel
 // ==============================
-async function loadMakalah() {
+async function loadTable() {
+  const tbody = document.querySelector("#makalahTable tbody");
+  tbody.innerHTML = "<tr><td colspan='5'>⏳ Memuat data...</td></tr>";
+
   const { data, error } = await supabase
-    .from("makalah_list")
+    .from(TABLE_NAME)
     .select("*")
     .order("id", { ascending: false });
 
   if (error) {
-    console.error("Error ambil data:", error);
-    alert("❌ Gagal memuat data!");
+    console.error(error);
+    tbody.innerHTML = "<tr><td colspan='5'>❌ Gagal memuat data!</td></tr>";
     return;
   }
 
-  tableBody.innerHTML = "";
+  if (!data.length) {
+    tbody.innerHTML = "<tr><td colspan='5'>Belum ada makalah diunggah.</td></tr>";
+    return;
+  }
 
+  tbody.innerHTML = "";
   data.forEach((item) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
       <td>${item.judul}</td>
       <td>${item.kelompok}</td>
       <td>${item.tanggal}</td>
       <td>${item.pertemuan}</td>
-      <td><a href="${item.file_url}" target="_blank">${item.nama_file}</a></td>
-      <td><button class="delete-btn" data-id="${item.id}">Hapus</button></td>
+      <td>
+        <a href="${item.file_url}" target="_blank" class="btn">Lihat File</a>
+      </td>
     `;
-    tableBody.appendChild(row);
+    tbody.appendChild(tr);
   });
 }
 
-// ==============================
-// FUNGSI HAPUS DATA
-// ==============================
-tableBody.addEventListener("click", async (e) => {
-  if (e.target.classList.contains("delete-btn")) {
-    const id = e.target.dataset.id;
-    if (confirm("Yakin ingin menghapus makalah ini?")) {
-      const { error } = await supabase.from("makalah_list").delete().eq("id", id);
-      if (error) {
-        alert("❌ Gagal menghapus data!");
-      } else {
-        alert("✅ Data berhasil dihapus!");
-        loadMakalah();
-      }
-    }
-  }
-});
-
-// ==============================
-// FILTER PENCARIAN
-// ==============================
-searchInput.addEventListener("input", () => {
-  const keyword = searchInput.value.toLowerCase();
-  const rows = tableBody.getElementsByTagName("tr");
-
-  for (let i = 0; i < rows.length; i++) {
-    const cells = rows[i].getElementsByTagName("td");
-    const match = Array.from(cells).some((cell) =>
-      cell.textContent.toLowerCase().includes(keyword)
-    );
-    rows[i].style.display = match ? "" : "none";
-  }
-});
-
-// ==============================
-// LOAD DATA SAAT AWAL
-// ==============================
-loadMakalah();
+// Jalankan saat halaman dimuat
+loadTable();

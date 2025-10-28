@@ -128,9 +128,13 @@ document.addEventListener("DOMContentLoaded", function () {
 // ==============================
 // KONFIGURASI SUPABASE
 // ==============================
-const SUPABASE_URL = "https://gufbusvnoscociobvxxn.supabase.co"; // 🔁 Ganti dengan URL proyekmu
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1ZmJ1c3Zub3Njb2Npb2J2eHhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzOTQ3ODUsImV4cCI6MjA3Njk3MDc4NX0.m5ulKD5UlAE3AZ_hizYJQuK1gQD2QOAg9njTHeqwGco"; // 🔁 Ganti dengan anon key Supabase
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// script.js
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+// === KONFIGURASI SUPABASE ===
+const supabaseUrl = 'https://gufbusvnoscociobvxxn.supabase.co'
+const supabaseKey = 'ISI_DENGAN_ANON_KEY_KAMU'
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 // ==============================
 // LOAD DATA MAKALAH (SEMUA USER)
