@@ -9,10 +9,10 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 // dasarakuntansi.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-// === KONFIGURASI SUPABASE ===
-const supabaseUrl = 'https://gufbusvnoscociobvxxn.supabase.co'
-const supabaseKey = 'ISI_DENGAN_ANON_KEY_KAMU'  // Ganti dengan anon public key dari Supabase
-const supabase = createClient(supabaseUrl, supabaseKey)
+// Ganti dengan kredensial milikmu
+const supabaseUrl = "https://gufbusvnoscociobvxxn.supabase.co";
+const supabaseAnonKey = "process.env.SUPABASE_KEY";
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // === Ambil parameter dari URL ===
 const params = new URLSearchParams(window.location.search);
@@ -106,3 +106,4 @@ async function loadMakalah() {
 
 // Jalankan setelah halaman siap
 document.addEventListener("DOMContentLoaded", loadMakalah);
+
