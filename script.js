@@ -131,10 +131,10 @@ document.addEventListener("DOMContentLoaded", function () {
 // script.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-// === KONFIGURASI SUPABASE ===
-const supabaseUrl = 'https://gufbusvnoscociobvxxn.supabase.co'
-const supabaseKey = 'ISI_DENGAN_ANON_KEY_KAMU'
-const supabase = createClient(supabaseUrl, supabaseKey)
+// Ganti dengan kredensial milikmu
+const supabaseUrl = "https://gufbusvnoscociobvxxn.supabase.co";
+const supabaseAnonKey = "process.env.SUPABASE_KEY";
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ==============================
 // LOAD DATA MAKALAH (SEMUA USER)
@@ -254,6 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
 
 
 
