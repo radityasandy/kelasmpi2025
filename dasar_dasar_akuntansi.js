@@ -150,7 +150,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const keyword = e.target.value.toLowerCase();
 
     const { data, error } = await supabase
-      .from("makalah_dan_ppt_data")
+      .from("const { data, error } = await supabase
+  .from("makalah_dan_ppt")
+  .select("*");
+")
       .select("*")
       .or(
         `judul.ilike.%${keyword}%,kelompok.ilike.%${keyword}%,pertemuan::text.ilike.%${keyword}%`
@@ -165,3 +168,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderTable(data);
   });
 });
+
