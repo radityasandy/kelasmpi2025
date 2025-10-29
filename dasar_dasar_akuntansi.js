@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const { data, error } = await supabase
       .from("const { data, error } = await supabase
-  .from("makalah_dan_ppt")
+  .from("MAKALAH_DAN_PPT")
   .select("*");
 ")
       .select("*")
@@ -168,4 +168,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderTable(data);
   });
 });
+
 
