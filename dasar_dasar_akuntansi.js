@@ -3,7 +3,6 @@
 // ==============================
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-// Ganti dengan kredensial milikmu
 const supabaseUrl = "https://gufbusvnoscociobvxxn.supabase.co";
 const supabaseAnonKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1ZmJ1c3Zub3Njb2Npb2J2eHhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzOTQ3ODUsImV4cCI6MjA3Njk3MDc4NX0.m5ulKD5UlAE3AZ_hizYJQuK1gQD2QOAg9njTHeqwGco";
@@ -17,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const tableBody = document.querySelector("#makalahTable tbody");
   const searchInput = document.getElementById("searchInput");
 
-  // Ambil data saat halaman dimuat
+  // Muat data awal
   await loadMakalah();
 
   // ============================
@@ -41,16 +40,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const fileName = `${Date.now()}_${file.name}`;
 
     try {
-      // Upload file ke bucket Supabase
+      // Upload file ke bucket (nama HARUS sama persis di Supabase)
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("makalah_dan_ppt")
+        .from("MAKALAH_DAN_PPT")
         .upload(fileName, file);
 
       if (uploadError) throw uploadError;
 
       // Ambil URL publik file
       const { data: publicUrlData } = supabase.storage
-        .from("makalah_dan_ppt")
+        .from("MAKALAH_DAN_PPT")
         .getPublicUrl(fileName);
 
       const fileUrl = publicUrlData.publicUrl;
@@ -66,6 +65,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             pertemuan,
             file_name: fileName,
             file_url: fileUrl,
+            uploaded_by: "user", // bisa ubah sesuai login
+            created_at: new Date().toISOString(),
           },
         ]);
 
@@ -92,15 +93,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       .order("id", { ascending: false });
 
     if (error) {
-      tableBody.innerHTML =
-        "<tr><td colspan='6'>❌ Gagal memuat data!</td></tr>";
+      tableBody.innerHTML = "<tr><td colspan='6'>❌ Gagal memuat data!</td></tr>";
       console.error("Load error:", error.message);
       return;
     }
 
     if (!data || data.length === 0) {
-      tableBody.innerHTML =
-        "<tr><td colspan='6'>Belum ada makalah diunggah.</td></tr>";
+      tableBody.innerHTML = "<tr><td colspan='6'>Belum ada makalah diunggah.</td></tr>";
       return;
     }
 
@@ -121,7 +120,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         <td>${item.pertemuan}</td>
         <td><a href="${item.file_url}" target="_blank">${item.file_name}</a></td>
         <td>
-          <button class="delete-btn" data-id="${item.id}" style="background:#dc2626;color:white;border:none;padding:6px 10px;border-radius:5px;cursor:pointer;">
+          <button class="delete-btn" data-id="${item.id}" 
+            style="background:#dc2626;color:white;border:none;padding:6px 10px;border-radius:5px;cursor:pointer;">
             Hapus
           </button>
         </td>
