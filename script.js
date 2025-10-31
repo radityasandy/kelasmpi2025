@@ -128,13 +128,12 @@ document.addEventListener("DOMContentLoaded", function () {
 // ==============================
 // KONFIGURASI SUPABASE
 // ==============================
-// script.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
 // Ganti dengan kredensial milikmu
-const supabaseUrl = "https://gufbusvnoscociobvxxn.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1ZmJ1c3Zub3Njb2Npb2J2eHhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzOTQ3ODUsImV4cCI6MjA3Njk3MDc4NX0.m5ulKD5UlAE3AZ_hizYJQuK1gQD2QOAg9njTHeqwGco";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const SUPABASE_URL = "https://gufbusvnoscociobvxxn.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd1ZmJ1c3Zub3Njb2Npb2J2eHhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzOTQ3ODUsImV4cCI6MjA3Njk3MDc4NX0.m5ulKD5UlAE3AZ_hizYJQuK1gQD2QOAg9njTHeqwGco";
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ==============================
 // LOAD DATA MAKALAH (SEMUA USER)
@@ -145,19 +144,27 @@ async function loadMakalahTable() {
 
   tableBody.innerHTML = "<tr><td colspan='4'>Memuat data...</td></tr>";
 
-  const { data: files, error } = await supabase.storage.from("makalah").list("makalah");
+  // Ambil daftar file dari bucket MAKALAH_DAN_PPT
+  const { data: files, error } = await supabase.storage.from("MAKALAH_DAN_PPT").list();
 
   if (error) {
-    tableBody.innerHTML = `<tr><td colspan='4'>Gagal memuat data makalah!</td></tr>`;
-    console.error(error);
+    tableBody.innerHTML = `<tr><td colspan='4'>❌ Gagal memuat data makalah!</td></tr>`;
+    console.error("Gagal load makalah:", error);
     return;
   }
 
   tableBody.innerHTML = "";
   const role = getUserRole();
 
+  // Jika tidak ada file
+  if (!files || files.length === 0) {
+    tableBody.innerHTML = "<tr><td colspan='4'>Belum ada makalah diunggah.</td></tr>";
+    return;
+  }
+
   files.forEach((file) => {
-    const fileUrl = `${SUPABASE_URL}/storage/v1/object/public/makalah/${file.name}`;
+    // URL publik dari file
+    const fileUrl = `${SUPABASE_URL}/storage/v1/object/public/MAKALAH_DAN_PPT/${file.name}`;
     const row = document.createElement("tr");
 
     let actionButtons = `
@@ -192,17 +199,28 @@ async function hapusMakalah(fileName) {
     return;
   }
 
-  if (confirm("Yakin ingin menghapus file ini?")) {
-    const { error } = await supabase.storage.from("makalah").remove([`makalah/${fileName}`]);
+  if (confirm(`Yakin ingin menghapus file "${fileName}" ?`)) {
+    const { error } = await supabase.storage.from("MAKALAH_DAN_PPT").remove([fileName]);
     if (error) {
       alert("❌ Gagal menghapus file!");
-      console.error(error);
+      console.error("Error hapus:", error);
       return;
     }
     alert("✅ File berhasil dihapus!");
     loadMakalahTable();
   }
 }
+
+// ==============================
+// FUNGSI ROLE USER (ADMIN/USER)
+// ==============================
+function getUserRole() {
+  // Ambil role dari localStorage atau sessionStorage
+  return localStorage.getItem("role") || "user";
+}
+
+// Jalankan otomatis saat halaman dimuat
+document.addEventListener("DOMContentLoaded", loadMakalahTable);
 
 
 
@@ -254,6 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
 
 
 
